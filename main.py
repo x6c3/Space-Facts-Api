@@ -67,7 +67,3 @@ def get_by_id(item_id: int):
 		print(f'Something went wrong {e}')
 
 	return req
-
-@app.get('/test/return/{id}')
-def hello(id):
-	return {'Message': f'{id}'}
