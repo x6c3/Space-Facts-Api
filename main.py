@@ -5,6 +5,7 @@ import json
 
 app = FastAPI()
 
+# database connnection
 conn = mysql.connector.connect(host='localhost', user='root', password='', database='space.db.dev')
 cursor = conn.cursor()
 class Facts(BaseModel):
@@ -57,10 +58,10 @@ def get_count():
 	}
 
 @app.get('/space/fact/view/id/{item_id}') # get the facts based on their ids / number
-def get_by_id(item_id: int):
+def get_by_id(item_id: int): # pass the query string with its name and datatype
 	try:
 		sql = "SELECT fact FROM `space-facts` WHERE id = %s"
-		values = (item_id, )
+		values = (item_id, ) # needs to pass as a tuple or will get an error use , instead of (())
 		cursor.execute(sql, values)
 		req = cursor.fetchone()
 	except HTTPException as e:
