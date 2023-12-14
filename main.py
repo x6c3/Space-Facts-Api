@@ -34,8 +34,7 @@ def create_facts(facts: Facts):
 		}
 
 
-@app.get('/space/fact/viewall') # This endpoint will view all of the facts in the database 
-
+@app.get('/space/fact/viewall') # This endpoint will view all of the facts in the database and writes it into a file
 def view_all_facts():
 	sql = "SELECT * FROM `space-facts`";
 	cursor.execute(sql)
@@ -49,7 +48,6 @@ def view_all_facts():
 	}
 
 @app.get('/space/fact/get/count') # get the total number of facts in the database
-
 def get_count():
 	sql = "SELECT count(*) From `space-facts`"
 	cursor.execute(sql)
@@ -58,14 +56,18 @@ def get_count():
 		'Message': f'You have {request} facts in the database.'
 	}
 
-@app.get('/space/fact/view/id/<int:id>') # get the facts based on their ids
-def get_by_id(id):
+@app.get('/space/fact/view/id/{item_id}') # get the facts based on their ids / number
+def get_by_id(item_id: int):
 	try:
 		sql = "SELECT fact FROM `space-facts` WHERE id = %s"
-		values = {"id": id}
+		values = (item_id, )
 		cursor.execute(sql, values)
 		req = cursor.fetchone()
 	except HTTPException as e:
 		print(f'Something went wrong {e}')
 
 	return req
+
+@app.get('/test/return/{id}')
+def hello(id):
+	return {'Message': f'{id}'}
