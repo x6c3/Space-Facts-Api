@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import mysql.connector
 import json
@@ -58,6 +58,14 @@ def get_count():
 		'Message': f'You have {request} facts in the database.'
 	}
 
+@app.get('/space/fact/view/id/<int:id>') # get the facts based on their ids
+def get_by_id(id):
+	try:
+		sql = "SELECT fact FROM `space-facts` WHERE id = %s"
+		values = {"id": id}
+		cursor.execute(sql, values)
+		req = cursor.fetchone()
+	except HTTPException as e:
+		print(f'Something went wrong {e}')
 
-
-
+	return req
