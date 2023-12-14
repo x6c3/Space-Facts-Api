@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
+import json
 
 app = FastAPI()
 
@@ -33,10 +34,30 @@ def create_facts(facts: Facts):
 		}
 
 
-@app.get('/space/fact/viewall')
+@app.get('/space/fact/viewall') # This endpoint will view all of the facts in the database 
 
-def view_all_facts(): # This endpoint will view all of the facts in the database 
-	pass
+def view_all_facts():
+	sql = "SELECT * FROM `space-facts`";
+	cursor.execute(sql)
+	request = cursor.fetchall()
+	filename = 'facts.json'
+	with open(filename, 'a') as f:
+		json.dump(request, f, indent=5)
+		f.close()
+	return {
+		'Message': f'successfull filename: {filename}'
+	}
+
+@app.get('/space/fact/get/count') # get the total number of facts in the database
+
+def get_count():
+	sql = "SELECT count(*) From `space-facts`"
+	cursor.execute(sql)
+	request = cursor.fetchone()
+	return {
+		'Message': f'You have {request} facts in the database.'
+	}
+
 
 
 
